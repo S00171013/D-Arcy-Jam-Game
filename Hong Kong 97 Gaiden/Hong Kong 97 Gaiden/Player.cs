@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Assignment_Adventure_Game
+namespace Hong_Kong_97_Gaiden
 {
     class Player : AnimatedSprite
     {
@@ -18,53 +18,71 @@ namespace Assignment_Adventure_Game
         public int MaxHealth { get; set; }
         public int Health { get; set; }
 
-        // Fields - public for now.
-        public List<Item> Inventory;
-        public List<Weapon> Weapons;
-
-        public Item EquippedItem;
-        public Weapon EquippedWeapon;
 
         // Declare const int for the player's speed.
         const int PLAYER_SPEED = 5;
-        
+
         Vector2 previousPosition;
 
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
-        public enum Direction { DOWN, UP, LEFT, RIGHT }
+        public enum Direction { UP, TOPRIGHT, RIGHT, BOTTOMRIGHT, DOWN, BOTTOMLEFT, LEFT, TOPLEFT }
         public Direction playerDirection;
 
-        // Idle Textures
-        public Texture2D FaceDown { get; set; }
-        public Texture2D FaceUp { get; set; }
-        public Texture2D FaceLeft { get; set; }
-        public Texture2D FaceRight { get; set; }
+        #region Idle Texture Properties
+        public Texture2D IdleUp { get; }
+        public Texture2D IdleTRight { get; }
+        public Texture2D IdleRight { get; }
+        public Texture2D IdleBRight { get; }
+        public Texture2D IdleDown { get; }
+        public Texture2D IdleBLeft { get; }
+        public Texture2D IdleLeft { get; }
+        public Texture2D IdleTLeft { get; }
+        #endregion
 
-        // Movement Textures.
-        public Texture2D MoveDown { get; set; }
-        public Texture2D MoveUp { get; set; }      
-        public Texture2D MoveLeft { get; set; }
-        public Texture2D MoveRight { get; set; }     
+        #region Movement Texture Properties
+        public Texture2D MoveUp { get; }
+        public Texture2D MoveTRight { get; }
+        public Texture2D MoveRight { get; }
+        public Texture2D MoveBRight { get; }
+        public Texture2D MoveDown { get; }
+        public Texture2D MoveBLeft { get; }
+        public Texture2D MoveLeft { get; }
+        public Texture2D MoveTLeft { get; }
+        #endregion
+
+        #region Shoot Texture Properties
+        public Texture2D ShootUp { get; }
+        public Texture2D ShootTRight { get; }
+        public Texture2D ShootRight { get; }
+        public Texture2D ShootBRight { get; }
+        public Texture2D ShootDown { get; }
+        public Texture2D ShootBLeft { get; }
+        public Texture2D ShootLeft { get; }
+        public Texture2D ShootTLeft { get; }
+        #endregion
+
+        #region Hurt Texture Properties
+        public Texture2D HurtTRight { get; }
+        public Texture2D HurtBRight { get; }
+        public Texture2D HurtBLeft { get; }
+        public Texture2D HurtTLeft { get; }
+        #endregion
         #endregion
 
         // Constructor.
         public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
-                                 
-            // The original example had this running in the player's Update method. - In case problems arise later with different rooms.
-            gameScreen = myGame.GraphicsDevice.Viewport;
 
-            // Set up player inventory and weapons lists.
-            Inventory = new List<Item>();
-            Weapons = new List<Weapon>();
+            // Get screen size.
+            gameScreen = myGame.GraphicsDevice.Viewport;       
         }
 
         public virtual void Update(GameTime gameTime)
         {
             // Set previous position, this is needed to handle collision.
-            previousPosition = Position;            
+            previousPosition = Position;
 
             // Call the method that allows the player to move.
             HandleMovement(gameTime);
@@ -73,32 +91,25 @@ namespace Assignment_Adventure_Game
             Position = Vector2.Clamp(Position, Vector2.Zero,
                 new Vector2(gameScreen.Width - Image.Width,
                 gameScreen.Height - Image.Height));
-            #endregion           
-           
-            // Update the player's inventory.
-            foreach(Item item in this.Inventory)
-            {
-                item.Update(gameTime);
-                
-            }
+            #endregion          
         }
-             
+
         // This method will take in the player animations that have already been loaded in the game1 class.
         public void GetAnimations(Texture2D faceDownIn, Texture2D faceUpIn, Texture2D faceLeftIn, Texture2D faceRightIn,
             Texture2D moveDownIn, Texture2D moveUpIn, Texture2D moveLeftIn, Texture2D moveRightIn)
         {
             #region Take in Idle textures.
             FaceDown = faceDownIn;
-            FaceUp = faceUpIn;          
+            FaceUp = faceUpIn;
             FaceLeft = faceLeftIn;
             FaceRight = faceRightIn;
             #endregion
 
             #region Take in Movement textures.
             MoveDown = moveDownIn;
-            MoveUp = moveUpIn;        
+            MoveUp = moveUpIn;
             MoveLeft = moveLeftIn;
-            MoveRight = moveRightIn;        
+            MoveRight = moveRightIn;
             #endregion
         }
 
@@ -190,7 +201,7 @@ namespace Assignment_Adventure_Game
             if (Bounds.Intersects(other.Bounds))
             {
                 Position = previousPosition;
-            }           
+            }
         }
 
         public bool Collect(Item itemPickedUp)
@@ -202,7 +213,7 @@ namespace Assignment_Adventure_Game
             }
 
             return false;
-        }       
+        }
 
         // Methods to add: Examine(etc), Attack(etc), Shoot(etc), ViewInventory(etc), ViewWeapons(etc). 
     }

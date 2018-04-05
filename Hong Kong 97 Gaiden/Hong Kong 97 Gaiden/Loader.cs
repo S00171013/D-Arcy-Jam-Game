@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Assignment_Adventure_Game
+namespace Hong_Kong_97_Gaiden
 {
     static class Loader
     {
