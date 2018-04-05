@@ -26,6 +26,9 @@ namespace Hong_Kong_97_Gaiden
         // Declare player.
         Player p1;
 
+        // Declare font for player score.
+        SpriteFont scoreFont;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -66,11 +69,14 @@ namespace Hong_Kong_97_Gaiden
             // Enemies
             enemyTextures = Loader.ContentLoad<Texture2D>(Content, "Enemy");
             // Backgrounds
-            background1 = Content.Load<Texture2D>("BG 1");
+            background1 = Content.Load<Texture2D>("Backgrounds/BG 1");
             #endregion
 
+            // Load game font.
+            scoreFont = Content.Load<SpriteFont>("Score Font");
+
             // Create player object.
-            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures);
+            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont);
 
             // TODO: use this.Content to load your game content here
         }
@@ -108,7 +114,7 @@ namespace Hong_Kong_97_Gaiden
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
 
@@ -117,6 +123,8 @@ namespace Hong_Kong_97_Gaiden
 
             // Draw the player.
             p1.Draw(spriteBatch);
+            // Draw the player score.
+            spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
 
             spriteBatch.End();
 

@@ -169,3 +169,10 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/BG 1.jpg
 
+#begin Score Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Score Font.spritefont
+

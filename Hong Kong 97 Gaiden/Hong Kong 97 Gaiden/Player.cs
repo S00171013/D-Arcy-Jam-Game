@@ -17,11 +17,12 @@ namespace Hong_Kong_97_Gaiden
         // Properties.
         public int MaxHealth { get; set; }
         public int Health { get; set; }
+        public int Score { get; set; }
      
         // Declare const int for the player's speed.
         const int PLAYER_SPEED = 5;
 
-        Vector2 previousPosition;
+        SpriteFont scoreFont;
 
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
@@ -42,7 +43,7 @@ namespace Hong_Kong_97_Gaiden
         #endregion
 
         // Constructor.
-        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn) : base(image, position, tint, frameCount)
+        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn, SpriteFont fontIn) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
 
@@ -62,6 +63,9 @@ namespace Hong_Kong_97_Gaiden
             MoveLeft = texturesIn["Move Left"];
             MoveRight = texturesIn["Move Right"];
             #endregion
+
+            // Set initial score.
+            Score = 0;
         }
 
         public virtual void Update(GameTime gameTime)
