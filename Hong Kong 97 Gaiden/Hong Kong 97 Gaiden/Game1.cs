@@ -14,21 +14,24 @@ namespace Hong_Kong_97_Gaiden
         SpriteBatch spriteBatch;
 
         #region Declare Game Textures
-        #region Player texture dictionaries
-        // Idle Textures
-        Dictionary<string, Texture2D> texturesPI = new Dictionary<string, Texture2D>();
-        // Movement Textures
-        Dictionary<string, Texture2D> texturesPM = new Dictionary<string, Texture2D>();
-        // Shoot Textures
-        Dictionary<string, Texture2D> texturesPS = new Dictionary<string, Texture2D>();
-        // Hurt Textures
-        Dictionary<string, Texture2D> texturesPH = new Dictionary<string, Texture2D>();
+        // Player Texture dictionary.
+        Dictionary<string, Texture2D> playerTextures = new Dictionary<string, Texture2D>();
+        // Enemy Texture dictionary.
+        Dictionary<string, Texture2D> enemyTextures = new Dictionary<string, Texture2D>();
+
+        // Background Image
+        Texture2D background1;
         #endregion
-        #endregion
+
+        // Declare player.
+        Player p1;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+
             Content.RootDirectory = "Content";
         }
 
@@ -57,19 +60,17 @@ namespace Hong_Kong_97_Gaiden
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            #region Load Player Textures
-            // Idle.
-            texturesPI = Loader.ContentLoad<Texture2D>(Content, "Player Sprites/1_Idle");
-            // Move.
-            texturesPM = Loader.ContentLoad<Texture2D>(Content, "Player Sprites/2_Move");
-            // Shoot.
-            texturesPS = Loader.ContentLoad<Texture2D>(Content, "Player Sprites/3_Shoot");
-            // Hurt.
-            texturesPH = Loader.ContentLoad<Texture2D>(Content, "Player Sprites/4_Hurt");
+            #region Load Game Textures
+            // Player
+            playerTextures = Loader.ContentLoad<Texture2D>(Content, "Player");
+            // Enemies
+            enemyTextures = Loader.ContentLoad<Texture2D>(Content, "Enemy");
+            // Backgrounds
+            background1 = Content.Load<Texture2D>("BG 1");
             #endregion
 
             // Create player object.
-
+            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures);
 
             // TODO: use this.Content to load your game content here
         }
@@ -93,6 +94,9 @@ namespace Hong_Kong_97_Gaiden
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // Update the player.
+            p1.Update(gameTime);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -105,6 +109,16 @@ namespace Hong_Kong_97_Gaiden
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+
+            // Draw the background.
+            spriteBatch.Draw(background1, new Vector2(0, 0), Color.White);
+
+            // Draw the player.
+            p1.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
 

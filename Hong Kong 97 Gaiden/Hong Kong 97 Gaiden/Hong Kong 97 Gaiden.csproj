@@ -56,39 +56,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Player Sprites\3_Shoot\PS_2_TRight.png" />
-    <Content Include="Content\Player Sprites\4_Hurt\PH_3_BLeft.png" />
-    <Content Include="Content\Player Sprites\4_Hurt\PH_2_BRight.png" />
-    <Content Include="Content\Player Sprites\4_Hurt\PH_4_TLeft.png" />
-    <Content Include="Content\Player Sprites\4_Hurt\PH_1_TRight.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_6_BLeft.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_4_BRight.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_5_Down.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_7_Left.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_3_Right.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_8_TLeft.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_2_TRight.png" />
-    <Content Include="Content\Player Sprites\1_Idle\PI_1_Up.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_6_BLeft.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_4_BRight.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_5_Down.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_7_Left.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_3_Right.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_8_TLeft.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_2_TRight.png" />
-    <Content Include="Content\Player Sprites\2_Move\PM_1_Up.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_6_BLeft.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_4_BRight.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_5_Down.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_7_Left.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_3_Right.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_8_TLeft.png" />
-    <Content Include="Content\Player Sprites\3_Shoot\PS_1_Up.png" />
+    <Content Include="Content\Backgrounds\BG 1.jpg" />
+    <Content Include="Content\Enemy\Enemy Type A.png" />
+    <Content Include="Content\Enemy\Enemy Type B.png" />
+    <Content Include="Content\Enemy\Enemy Type C.png" />
+    <Content Include="Content\Enemy\Enemy Type D.png" />
+    <Content Include="Content\Player\Move Down.png" />
+    <Content Include="Content\Player\Move Left.png" />
+    <Content Include="Content\Player\Move Right.png" />
+    <Content Include="Content\Player\Move Up.png" />
+    <Content Include="Content\Player\Stand Down.png" />
+    <Content Include="Content\Player\Stand Left.png" />
+    <Content Include="Content\Player\Stand Right.png" />
+    <Content Include="Content\Player\Stand Up.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Projectiles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
