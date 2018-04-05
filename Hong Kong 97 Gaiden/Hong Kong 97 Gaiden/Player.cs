@@ -18,11 +18,17 @@ namespace Hong_Kong_97_Gaiden
         public int MaxHealth { get; set; }
         public int Health { get; set; }
         public int Score { get; set; }
-     
+
         // Declare const int for the player's speed.
         const int PLAYER_SPEED = 5;
 
         SpriteFont scoreFont;
+
+        // Projectile Image
+        Texture2D projectileImage;
+
+        // List of projectiles fired.
+        public List<Projectile> projectilesFired = new List<Projectile>();
 
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
@@ -43,7 +49,7 @@ namespace Hong_Kong_97_Gaiden
         #endregion
 
         // Constructor.
-        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn, SpriteFont fontIn) : base(image, position, tint, frameCount)
+        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn, SpriteFont fontIn, Texture2D projectileImgIn) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
 
@@ -66,12 +72,22 @@ namespace Hong_Kong_97_Gaiden
 
             // Set initial score.
             Score = 0;
-        }
+
+            // Set input manager.
+            new InputManager(myGame);
+
+            // Projectile
+            projectileImage = projectileImgIn;
+            projectilesFired = new List<Projectile>();
+    }
 
         public virtual void Update(GameTime gameTime)
-        {           
+        {
             // Call the method that allows the player to move.
             HandleMovement(gameTime);
+
+            // Call the method that allows the player to shoot projectiles.
+            HandleProjectiles(gameTime);
 
             #region Make sure the player stays in the bounds of the screen.
             Position = Vector2.Clamp(Position, Vector2.Zero,
@@ -79,25 +95,6 @@ namespace Hong_Kong_97_Gaiden
                 gameScreen.Height - Image.Height));
             #endregion          
         }
-
-        // This method will take in the player animations that have already been loaded in the game1 class.
-        //public void GetAnimations(Texture2D faceDownIn, Texture2D faceUpIn, Texture2D faceLeftIn, Texture2D faceRightIn,
-        //    Texture2D moveDownIn, Texture2D moveUpIn, Texture2D moveLeftIn, Texture2D moveRightIn)
-        //{
-        //    #region Take in Idle textures.
-        //    FaceDown = faceDownIn;
-        //    FaceUp = faceUpIn;
-        //    FaceLeft = faceLeftIn;
-        //    FaceRight = faceRightIn;
-        //    #endregion
-
-        //    #region Take in Movement textures.
-        //    MoveDown = moveDownIn;
-        //    MoveUp = moveUpIn;
-        //    MoveLeft = moveLeftIn;
-        //    MoveRight = moveRightIn;
-        //    #endregion
-        //}
 
         public void HandleMovement(GameTime gameTime)
         {
@@ -172,6 +169,30 @@ namespace Hong_Kong_97_Gaiden
                 }
             }
             #endregion                   
-        }                           
+        }
+
+        public void HandleProjectiles(GameTime gameTime)
+        {
+            // Update projectiles fired.
+            foreach (Projectile p in projectilesFired)
+            {
+                p.Update(gameTime);
+            }
+
+            // Create projectile when Enter is pressed.
+            if (InputManager.IsKeyPressed(Keys.Enter))
+            {
+                projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1));
+            }
+
+            // Remove any offscreen projectiles from the list.
+            for (int i = 0; i < projectilesFired.Count; i++)
+            {
+                if (!projectilesFired[i].Visible)
+                {
+                    projectilesFired.RemoveAt(i);
+                }
+            }
+        }
     }
 }

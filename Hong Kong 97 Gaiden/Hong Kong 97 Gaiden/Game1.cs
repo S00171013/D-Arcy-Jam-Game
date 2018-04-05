@@ -25,6 +25,7 @@ namespace Hong_Kong_97_Gaiden
 
         // Declare player.
         Player p1;
+        Texture2D playerProjectile, enemyProjectile;
 
         // Declare font for player score.
         SpriteFont scoreFont;
@@ -70,13 +71,16 @@ namespace Hong_Kong_97_Gaiden
             enemyTextures = Loader.ContentLoad<Texture2D>(Content, "Enemy");
             // Backgrounds
             background1 = Content.Load<Texture2D>("Backgrounds/BG 1");
+
+            playerProjectile = Content.Load<Texture2D>("Projectiles/Player Projectile");
+            enemyProjectile = Content.Load<Texture2D>("Projectiles/Enemy Projectile");
             #endregion
 
             // Load game font.
             scoreFont = Content.Load<SpriteFont>("Score Font");
 
             // Create player object.
-            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont);
+            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont, playerProjectile);
 
             // TODO: use this.Content to load your game content here
         }
@@ -120,6 +124,12 @@ namespace Hong_Kong_97_Gaiden
 
             // Draw the background.
             spriteBatch.Draw(background1, new Vector2(0, 0), Color.White);
+
+            // Draw any projectiles fired by the player.
+            foreach(Projectile p in p1.projectilesFired)
+            {
+                p.Draw(spriteBatch);
+            }
 
             // Draw the player.
             p1.Draw(spriteBatch);

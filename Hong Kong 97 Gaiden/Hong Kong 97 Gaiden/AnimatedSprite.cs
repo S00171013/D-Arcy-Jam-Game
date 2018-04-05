@@ -28,7 +28,9 @@ namespace Hong_Kong_97_Gaiden
         public int currentFrame = 0;
         int numberOfFrames = 0;
         int millisecondsBetweenFrames = 200;
-        float elapsedTime = 0;       
+        float elapsedTime = 0;
+
+        public bool Visible = false;
        
         // Constructor
         public AnimatedSprite(Texture2D image, Vector2 position, Color tint, int frameCountIn)
@@ -42,6 +44,8 @@ namespace Hong_Kong_97_Gaiden
             // Width is now width/number of frames
             Bounds = new Rectangle((int)position.X, (int)position.Y, image.Width/FrameCount, image.Height);
 
+            Visible = true;
+
             // Set up source rectangle initially. The player sprite won't appear otherwise.
             SourceRectangle = new Rectangle(
                 currentFrame * Image.Width / FrameCount, // Sprite width
@@ -51,7 +55,7 @@ namespace Hong_Kong_97_Gaiden
         }
 
         public void UpdateAnimation(GameTime gameTime)
-        {           
+        {                     
             // Track how much time has passed
             elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
 
