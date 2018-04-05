@@ -24,6 +24,12 @@ namespace Hong_Kong_97_Gaiden
 
         SpriteFont scoreFont;
 
+        // Projectile timer.
+        int counter = 1;
+        int limit = 0;
+        float countDuration = 0.2f; //every  1s.
+        float currentTime = 0f;
+
         // Projectile Image
         Texture2D projectileImage;
 
@@ -79,7 +85,7 @@ namespace Hong_Kong_97_Gaiden
             // Projectile
             projectileImage = projectileImgIn;
             projectilesFired = new List<Projectile>();
-    }
+        }
 
         public virtual void Update(GameTime gameTime)
         {
@@ -173,16 +179,30 @@ namespace Hong_Kong_97_Gaiden
 
         public void HandleProjectiles(GameTime gameTime)
         {
+            // Create projectile when Enter is pressed.
+
+            #region Timer ensures that projectiles can only be fired at a set pace.
+            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds; //Time passed since last Update() 
+
+            if (currentTime >= countDuration)
+            {
+                counter--;
+                currentTime -= countDuration; // "use up" the time
+                                              //any actions to perform
+
+            }
+            #endregion
+
+            if (InputManager.IsKeyHeld(Keys.Enter) && counter < limit)
+            {
+                projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1, playerDirection));
+                counter = 1;
+            }
+
             // Update projectiles fired.
             foreach (Projectile p in projectilesFired)
             {
                 p.Update(gameTime);
-            }
-
-            // Create projectile when Enter is pressed.
-            if (InputManager.IsKeyPressed(Keys.Enter))
-            {
-                projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1));
             }
 
             // Remove any offscreen projectiles from the list.

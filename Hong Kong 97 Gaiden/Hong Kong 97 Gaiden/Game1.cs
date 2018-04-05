@@ -123,16 +123,16 @@ namespace Hong_Kong_97_Gaiden
             spriteBatch.Begin();
 
             // Draw the background.
-            spriteBatch.Draw(background1, new Vector2(0, 0), Color.White);
-
-            // Draw any projectiles fired by the player.
-            foreach(Projectile p in p1.projectilesFired)
-            {
-                p.Draw(spriteBatch);
-            }
+            spriteBatch.Draw(background1, new Vector2(0, 0), Color.White);          
 
             // Draw the player.
             p1.Draw(spriteBatch);
+
+            // Draw any projectiles fired by the player.
+            foreach (Projectile p in p1.projectilesFired)
+            {
+                p.Draw(spriteBatch);
+            }
             // Draw the player score.
             spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
 
