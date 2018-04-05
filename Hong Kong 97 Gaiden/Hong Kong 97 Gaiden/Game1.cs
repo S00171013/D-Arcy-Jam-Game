@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace Hong_Kong_97_Gaiden
 {
@@ -30,6 +31,18 @@ namespace Hong_Kong_97_Gaiden
         // Declare font for player score.
         SpriteFont scoreFont;
 
+        // Declare enemy list.
+        List<Enemy> enemies;
+
+        // Enemy Spawn timer.
+        int counter = 3;
+        int limit = 0;
+        float countDuration = 1f; //every  1s.
+        float currentTime = 0f;
+
+        // Random generator.
+        Random randomG = new Random();
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -47,10 +60,7 @@ namespace Hong_Kong_97_Gaiden
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-            // Set mouse to visible.
-            IsMouseVisible = true;
+            // TODO: Add your initialization logic here          
 
             base.Initialize();
         }
@@ -72,6 +82,7 @@ namespace Hong_Kong_97_Gaiden
             // Backgrounds
             background1 = Content.Load<Texture2D>("Backgrounds/BG 1");
 
+            // Load projectile images.
             playerProjectile = Content.Load<Texture2D>("Projectiles/Player Projectile");
             enemyProjectile = Content.Load<Texture2D>("Projectiles/Enemy Projectile");
             #endregion
@@ -81,6 +92,10 @@ namespace Hong_Kong_97_Gaiden
 
             // Create player object.
             p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont, playerProjectile);
+
+            // Load enemy list.
+            enemies = new List<Enemy>();
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -107,6 +122,21 @@ namespace Hong_Kong_97_Gaiden
             // Update the player.
             p1.Update(gameTime);
 
+            // Spawn enemies.
+            SpawnEnemies(gameTime);
+
+            #region Collision Checking.
+            // Check player and enemy.
+            foreach (Enemy e in enemies)
+            {
+                e.CheckPlayerCollision(p1);
+                
+
+            }
+
+            
+            #endregion
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -128,19 +158,84 @@ namespace Hong_Kong_97_Gaiden
             // Draw the player.
             p1.Draw(spriteBatch);
 
+            #region Draw enemies.
+            foreach(Enemy e in enemies)
+            {
+                e.Draw(spriteBatch);
+
+                // Draw any projectiles fired by the enemies.
+                foreach (Projectile p in e.projectilesFired)
+                {
+                    p.Draw(spriteBatch);
+                }
+            }
+            #endregion
+
             // Draw any projectiles fired by the player.
             foreach (Projectile p in p1.projectilesFired)
             {
                 p.Draw(spriteBatch);
-            }
+            }        
+
             // Draw the player score.
             spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
-
+            spriteBatch.DrawString(scoreFont, "Health: " + p1.Health, new Vector2(10, 60), Color.White);
             spriteBatch.End();
 
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void SpawnEnemies(GameTime gameTime)
+        {
+            #region Timer ensures that enemies can only be spawn at a set pace.
+            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds; //Time passed since last Update() 
+
+            if (currentTime >= countDuration)
+            {
+                counter--;
+                currentTime -= countDuration; // "use up" the time
+                                              //any actions to perform
+            }
+            #endregion
+
+            // Spawn new enemies if the conditions are right.
+            if (enemies.Count <= 15 && counter <= limit)
+            {
+                enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width-100), GraphicsDevice.Viewport.Y - 100),
+                    Color.White, 1, "A", enemyTextures, enemyProjectile));
+
+                counter = 3;   
+            }
+
+            #region Update each visible enemy.
+            foreach (Enemy e in enemies)
+            {
+                e.Update(gameTime);
+
+                // Update any projectiles fired by the enemies.
+                foreach (Projectile p in e.projectilesFired)
+                {
+                    p.Update(gameTime);
+                }
+            }
+            #endregion
+
+            // Remove any dead or off-screen enemies from the list.
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (!enemies[i].Visible || enemies[i].EnemyHealth <= 0)
+                {
+                    enemies.RemoveAt(i);
+                }
+            }
+        }
+
+        // Quick method to get a random number within a specified range.
+        public int RandomInt(int min, int max)
+        {
+            return randomG.Next(min, max);
         }
     }
 }

@@ -15,14 +15,30 @@ namespace Hong_Kong_97_Gaiden
         private Player.Direction directionFired;
 
         const int P_SPEED = 7;
+        private Texture2D projectileImage;
+        private Color white;
+        private int v1;
+        private string v2;
 
-
+        // Player projectile constructor.
         public Projectile(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn, Player.Direction pDirection) : base(image, position, tint, frameCountIn)
         {
             myGame = gameIn;
 
             // Get direction fired.
             directionFired = pDirection;
+
+            gameScreen = myGame.GraphicsDevice.Viewport;
+
+        }
+
+        // Enemy projectile constructor.
+        public Projectile(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn) : base(image, position, tint, frameCountIn)
+        {
+            myGame = gameIn;
+
+            // Get direction fired.
+            directionFired = Player.Direction.DOWN;
 
             gameScreen = myGame.GraphicsDevice.Viewport;
 

@@ -71,7 +71,7 @@ namespace Hong_Kong_97_Gaiden
 
                 elapsedTime = 0;
             }
-
+          
             // Update our source rectangle
             SourceRectangle = new Rectangle(
                 currentFrame * Image.Width / FrameCount, // Sprite width

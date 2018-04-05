@@ -14,8 +14,7 @@ namespace Hong_Kong_97_Gaiden
         protected Game myGame;
         Viewport gameScreen;
 
-        // Properties.
-        public int MaxHealth { get; set; }
+        // Properties.      
         public int Health { get; set; }
         public int Score { get; set; }
 
@@ -27,7 +26,7 @@ namespace Hong_Kong_97_Gaiden
         // Projectile timer.
         int counter = 1;
         int limit = 0;
-        float countDuration = 0.2f; //every  1s.
+        float countDuration = 0.2f; //every  0.2s.
         float currentTime = 0f;
 
         // Projectile Image
@@ -82,6 +81,9 @@ namespace Hong_Kong_97_Gaiden
             // Set input manager.
             new InputManager(myGame);
 
+            // Set health.
+            Health = 100;
+
             // Projectile
             projectileImage = projectileImgIn;
             projectilesFired = new List<Projectile>();
@@ -94,6 +96,8 @@ namespace Hong_Kong_97_Gaiden
 
             // Call the method that allows the player to shoot projectiles.
             HandleProjectiles(gameTime);
+
+            
 
             #region Make sure the player stays in the bounds of the screen.
             Position = Vector2.Clamp(Position, Vector2.Zero,
@@ -180,7 +184,6 @@ namespace Hong_Kong_97_Gaiden
         public void HandleProjectiles(GameTime gameTime)
         {
             // Create projectile when Enter is pressed.
-
             #region Timer ensures that projectiles can only be fired at a set pace.
             currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds; //Time passed since last Update() 
 
@@ -214,5 +217,23 @@ namespace Hong_Kong_97_Gaiden
                 }
             }
         }
+
+        // Check for collision
+        public void CheckEnemyCollision(Enemy other)
+        {
+            // Rectangle intersects            
+            if ((Bounds.Intersects(other.Bounds)))
+            {
+                this.Health -= 20;
+                other.Visible = false;
+            }
+
+            else
+            {
+                Tint = Color.White;
+                
+            }
+        }
+
     }
 }

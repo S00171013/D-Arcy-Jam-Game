@@ -145,18 +145,6 @@
 /processorParam:TextureFormat=Color
 /build:Enemy/Enemy Type C.png
 
-#begin Enemy/Enemy Type D.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,255,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Enemy/Enemy Type D.png
-
 #begin Backgrounds/BG 1.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
