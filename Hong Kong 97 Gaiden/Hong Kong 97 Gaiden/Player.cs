@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -35,6 +36,9 @@ namespace Hong_Kong_97_Gaiden
         // List of projectiles fired.
         public List<Projectile> projectilesFired = new List<Projectile>();
 
+        // SFX Dictionary.
+        Dictionary<string, SoundEffect> sfx;
+
         #region Declare variables to handle animation for this class.
         // Set up enum to keep track of player orientation.    
         public enum Direction { DOWN, UP, LEFT, RIGHT }
@@ -54,7 +58,7 @@ namespace Hong_Kong_97_Gaiden
         #endregion
 
         // Constructor.
-        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn, SpriteFont fontIn, Texture2D projectileImgIn) : base(image, position, tint, frameCount)
+        public Player(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCount, Dictionary<string, Texture2D> texturesIn, SpriteFont fontIn, Texture2D projectileImgIn, Dictionary<string, SoundEffect> sfxIn) : base(image, position, tint, frameCount)
         {
             myGame = gameIn;
 
@@ -87,6 +91,9 @@ namespace Hong_Kong_97_Gaiden
             // Projectile
             projectileImage = projectileImgIn;
             projectilesFired = new List<Projectile>();
+
+            // SFX         
+            sfx = sfxIn;
         }
 
         public virtual void Update(GameTime gameTime)
@@ -198,7 +205,8 @@ namespace Hong_Kong_97_Gaiden
 
             if (InputManager.IsKeyHeld(Keys.Enter) && counter < limit)
             {
-                projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1, playerDirection));
+                projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1, playerDirection, sfx));
+                sfx["Shoot"].Play();
                 counter = 1;
             }
 
@@ -225,14 +233,9 @@ namespace Hong_Kong_97_Gaiden
             if ((Bounds.Intersects(other.Bounds)))
             {
                 this.Health -= 20;
+                sfx["Hit"].Play();
                 other.Visible = false;
-            }
-
-            else
-            {
-                Tint = Color.White;
-                
-            }
+            }        
         }
 
         public void CheckEnemyProjectileCollision(Projectile other)
@@ -240,9 +243,9 @@ namespace Hong_Kong_97_Gaiden
             if ((Bounds.Intersects(other.Bounds)))
             {
                 this.Health -= 20;
+                sfx["Hit"].Play();
                 other.Visible = false;
             }
         }
-
     }
 }

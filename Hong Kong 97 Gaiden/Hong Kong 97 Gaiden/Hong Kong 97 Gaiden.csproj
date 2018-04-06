@@ -60,6 +60,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Backgrounds\BG 1.jpg" />
+    <Content Include="Content\Backgrounds\HK 97 G Logo.png" />
+    <Content Include="Content\Backgrounds\HK 97 Game Over.png" />
+    <Content Include="Content\BGM\107 mt katatsumuri - mifune.mp3" />
+    <Content Include="Content\BGM\118 club zodiac.mp3" />
+    <Content Include="Content\BGM\207 smile hirasaka.mp3" />
+    <Content Include="Content\BGM\209 abandoned factory.mp3" />
+    <Content Include="Content\BGM\213 illusions.mp3" />
+    <Content Include="Content\BGM\224 monado mandala.mp3" />
+    <Content Include="Content\BGM\225 reminiscence %28sorrowful%29.mp3" />
+    <Content Include="Content\BGM\Game Over.mp3" />
+    <Content Include="Content\BGM\robotnik.mp3" />
     <Content Include="Content\Enemy\Enemy Type A.png" />
     <Content Include="Content\Enemy\Enemy Type B.png" />
     <Content Include="Content\Enemy\Enemy Type C.png" />
@@ -73,6 +84,9 @@
     <Content Include="Content\Player\Stand Up.png" />
     <Content Include="Content\Projectiles\Enemy Projectile.png" />
     <Content Include="Content\Projectiles\Player Projectile.png" />
+    <Content Include="Content\SFX\Confirm.wav" />
+    <Content Include="Content\SFX\Hit.wav" />
+    <Content Include="Content\SFX\Shoot.wav" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

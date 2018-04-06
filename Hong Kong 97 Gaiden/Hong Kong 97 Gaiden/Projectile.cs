@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Hong_Kong_97_Gaiden
@@ -15,15 +16,16 @@ namespace Hong_Kong_97_Gaiden
         private Player.Direction directionFired;
 
         const int P_SPEED = 7;
-        private Texture2D projectileImage;
-        private Color white;
-        private int v1;
-        private string v2;
+
+        // SFX Dictionary.
+        Dictionary<string, SoundEffect> sfx;
 
         // Player projectile constructor.
-        public Projectile(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn, Player.Direction pDirection) : base(image, position, tint, frameCountIn)
+        public Projectile(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn, Player.Direction pDirection, Dictionary<string, SoundEffect> sfxIn) : base(image, position, tint, frameCountIn)
         {
             myGame = gameIn;
+
+            sfx = sfxIn;
 
             // Get direction fired.
             directionFired = pDirection;
@@ -86,6 +88,7 @@ namespace Hong_Kong_97_Gaiden
             if ((Bounds.Intersects(e.Bounds)))
             {
                 e.EnemyHealth -= 2;
+                sfx["Hit"].Play();
                 this.Visible = false;              
             }            
         }

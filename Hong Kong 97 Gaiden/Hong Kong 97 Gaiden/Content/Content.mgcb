@@ -188,3 +188,75 @@
 /processorParam:TextureFormat=Color
 /build:Projectiles/Player Projectile.png
 
+#begin BGM/107 mt katatsumuri - mifune.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/107 mt katatsumuri - mifune.mp3
+
+#begin BGM/118 club zodiac.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/118 club zodiac.mp3
+
+#begin BGM/207 smile hirasaka.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/207 smile hirasaka.mp3
+
+#begin BGM/209 abandoned factory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/209 abandoned factory.mp3
+
+#begin BGM/213 illusions.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/213 illusions.mp3
+
+#begin BGM/224 monado mandala.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/224 monado mandala.mp3
+
+#begin BGM/225 reminiscence (sorrowful).mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/225 reminiscence (sorrowful).mp3
+
+#begin BGM/Game Over.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/Game Over.mp3
+
+#begin BGM/robotnik.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:BGM/robotnik.mp3
+
+#begin SFX/Confirm.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Confirm.wav
+
+#begin SFX/Hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Hit.wav
+
+#begin SFX/Shoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Shoot.wav
+

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Hong_Kong_97_Gaiden
 {
@@ -42,6 +43,12 @@ namespace Hong_Kong_97_Gaiden
 
         // Random generator.
         Random randomG = new Random();
+
+        // BGM 
+
+
+        // SFX
+        Dictionary<string, SoundEffect> sfx = new Dictionary<string, SoundEffect>();
 
         public Game1()
         {
@@ -90,12 +97,15 @@ namespace Hong_Kong_97_Gaiden
             // Load game font.
             scoreFont = Content.Load<SpriteFont>("Score Font");
 
+            // Load BGM and SFX  
+            sfx = Loader.ContentLoad<SoundEffect>(Content, "SFX");
+
+
             // Create player object.
-            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont, playerProjectile);
+            p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont, playerProjectile, sfx);
 
             // Load enemy list.
-            enemies = new List<Enemy>();
-
+            enemies = new List<Enemy>();         
 
             // TODO: use this.Content to load your game content here
         }
@@ -130,6 +140,8 @@ namespace Hong_Kong_97_Gaiden
             foreach (Enemy e in enemies)
             {
                 e.CheckPlayerCollision(p1);
+
+                
 
                 // Check player projectile collision with enemy.
                 foreach (Projectile p in p1.projectilesFired)
@@ -213,7 +225,7 @@ namespace Hong_Kong_97_Gaiden
             if (enemies.Count <= 15 && counter <= limit)
             {
                 enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width-100), GraphicsDevice.Viewport.Y - 100),
-                    Color.White, 1, "A", enemyTextures, enemyProjectile));
+                    Color.White, 1, "A", enemyTextures, enemyProjectile, sfx));
 
                 counter = 3;   
             }
@@ -232,14 +244,14 @@ namespace Hong_Kong_97_Gaiden
             }
             #endregion
 
-            // Remove any dead or off-screen enemies from the list.
+            #region Remove any dead or off-screen enemies from the list.
             for (int i = 0; i < enemies.Count; i++)
             {
                 // If an enemy has been defeated...
                 if (!enemies[i].Visible && enemies[i].EnemyHealth <= 0)
                 {
                     // Update player score
-                    p1.Score += enemies[i].ScoreWorth;
+                    p1.Score += enemies[i].ScoreWorth;                   
 
                     // Remove enemy.
                     enemies.RemoveAt(i);
@@ -254,12 +266,15 @@ namespace Hong_Kong_97_Gaiden
                         p1.Score -= enemies[i].ScoreWorth;
                     }
 
+                    sfx["Hit"].Play();
+
                     p1.Health -= 20;
 
                     // Remove enemy.
                     enemies.RemoveAt(i);
-                }
+                }            
             }
+            #endregion
         }
 
         // Quick method to get a random number within a specified range.

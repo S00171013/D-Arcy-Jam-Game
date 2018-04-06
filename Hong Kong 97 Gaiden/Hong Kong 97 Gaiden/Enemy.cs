@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Hong_Kong_97_Gaiden
@@ -31,11 +32,16 @@ namespace Hong_Kong_97_Gaiden
         // List of projectiles fired.
         public List<Projectile> projectilesFired = new List<Projectile>();
 
-        public Enemy(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn, string typeIn, Dictionary<string, Texture2D> enemyImagesIn, Texture2D projectileImgIn) : base(image, position, tint, frameCountIn)
+        // SFX Dictionary.
+        Dictionary<string, SoundEffect> sfx;
+
+        public Enemy(Game gameIn, Texture2D image, Vector2 position, Color tint, int frameCountIn, string typeIn, Dictionary<string, Texture2D> enemyImagesIn, Texture2D projectileImgIn, Dictionary<string, SoundEffect> sfxIn) : base(image, position, tint, frameCountIn)
         {
             myGame = gameIn;
 
             Type = typeIn;
+
+            sfx = sfxIn;
 
             #region Determine enemy type.
             switch(Type)
@@ -138,7 +144,9 @@ namespace Hong_Kong_97_Gaiden
             if ((Bounds.Intersects(player.Bounds)))
             {
                 player.Health -= 20;
-                this.EnemyHealth = 0;
+
+                sfx["Hit"].Play();
+                //this.EnemyHealth = 0;
                 this.Visible = false;                           
             }                    
         }
