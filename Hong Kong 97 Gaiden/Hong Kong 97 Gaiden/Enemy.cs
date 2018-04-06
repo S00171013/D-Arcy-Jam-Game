@@ -56,16 +56,16 @@ namespace Hong_Kong_97_Gaiden
 
                 case "B":
                     Image = enemyImagesIn["Enemy Type B"];
-                    EnemySpeed = 10;
-                    EnemyHealth = 10;
+                    EnemySpeed = 3;
+                    EnemyHealth = 1;
                     ScoreWorth = 100;
                     ShootCounter = 3;
                     break;
 
                 case "C":
                     Image = enemyImagesIn["Enemy Type C"];
-                    EnemySpeed = 6;
-                    EnemyHealth = 15;
+                    EnemySpeed = 1;
+                    EnemyHealth = 8;
                     ScoreWorth = 150;
                     ShootCounter = 2;
                     break;           
@@ -118,6 +118,7 @@ namespace Hong_Kong_97_Gaiden
             if (counter <= limit)
             {
                 projectilesFired.Add(new Projectile(myGame, projectileImage, this.Position, Color.White, 1));
+                sfx["Shoot"].Play();
                 counter = ShootCounter;
             }
 
@@ -145,7 +146,7 @@ namespace Hong_Kong_97_Gaiden
             {
                 player.Health -= 20;
 
-                sfx["Hit"].Play();
+                //sfx["Hit"].Play();
                 //this.EnemyHealth = 0;
                 this.Visible = false;                           
             }                    

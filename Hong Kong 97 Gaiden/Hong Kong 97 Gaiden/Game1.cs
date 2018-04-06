@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Hong_Kong_97_Gaiden
 {
@@ -15,11 +16,19 @@ namespace Hong_Kong_97_Gaiden
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        // Set up enum for the game's states.
+        public enum gameState { TITLE, INTRO, ROUND1, ROUND2, ROUND3, GAMEOVER, WIN }
+        public gameState currentState;
+        string[] enemyTypes = { "A", "B", "C" };
+
         #region Declare Game Textures
         // Player Texture dictionary.
         Dictionary<string, Texture2D> playerTextures = new Dictionary<string, Texture2D>();
         // Enemy Texture dictionary.
         Dictionary<string, Texture2D> enemyTextures = new Dictionary<string, Texture2D>();
+
+        // BG Texture dictionary.
+        Dictionary<string, Texture2D> bgTextures = new Dictionary<string, Texture2D>();
 
         // Background Image
         Texture2D background1;
@@ -45,7 +54,8 @@ namespace Hong_Kong_97_Gaiden
         Random randomG = new Random();
 
         // BGM 
-
+        Dictionary<string, Song> bgm = new Dictionary<string, Song>();
+        Song currentlyPlaying;
 
         // SFX
         Dictionary<string, SoundEffect> sfx = new Dictionary<string, SoundEffect>();
@@ -87,7 +97,10 @@ namespace Hong_Kong_97_Gaiden
             // Enemies
             enemyTextures = Loader.ContentLoad<Texture2D>(Content, "Enemy");
             // Backgrounds
-            background1 = Content.Load<Texture2D>("Backgrounds/BG 1");
+            bgTextures = Loader.ContentLoad<Texture2D>(Content, "Backgrounds");
+
+            //background1 = Content.Load<Texture2D>("Backgrounds/BG 1");
+
 
             // Load projectile images.
             playerProjectile = Content.Load<Texture2D>("Projectiles/Player Projectile");
@@ -98,6 +111,14 @@ namespace Hong_Kong_97_Gaiden
             scoreFont = Content.Load<SpriteFont>("Score Font");
 
             // Load BGM and SFX  
+            // I do not own any of the BGM used.
+            bgm = Loader.ContentLoad<Song>(Content, "BGM");
+
+            // Set volume.
+            MediaPlayer.Volume = 0f;
+            MediaPlayer.IsRepeating = true;
+
+            // SFX
             sfx = Loader.ContentLoad<SoundEffect>(Content, "SFX");
 
 
@@ -105,7 +126,10 @@ namespace Hong_Kong_97_Gaiden
             p1 = new Player(this, playerTextures["Stand Down"], new Vector2(640, 550), Color.White, 2, playerTextures, scoreFont, playerProjectile, sfx);
 
             // Load enemy list.
-            enemies = new List<Enemy>();         
+            enemies = new List<Enemy>();
+
+            // Set inital game state.
+            currentState = gameState.TITLE;
 
             // TODO: use this.Content to load your game content here
         }
@@ -129,36 +153,127 @@ namespace Hong_Kong_97_Gaiden
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // Update the player.
-            p1.Update(gameTime);
+            switch (currentState)
+            {
+                case gameState.TITLE:
+                    #region BGM
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Smile Hirasaka"]))
+                    {
+                        currentlyPlaying = bgm["Smile Hirasaka"];
+                        MediaPlayer.Volume += 0.5f;
+                        MediaPlayer.Play(bgm["Smile Hirasaka"]);
+                        MediaPlayer.IsRepeating = true;
+                    }
+                    #endregion                    
 
-            // Spawn enemies.
-            SpawnEnemies(gameTime);
+                    if(Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        currentState = gameState.ROUND1;
+                    }
+                    break;
+
+                case gameState.INTRO:
+                    break;
+
+                case gameState.ROUND1:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Mt Mifune"]))
+                    {
+                        currentlyPlaying = bgm["Mt Mifune"];
+                        MediaPlayer.Play(bgm["Mt Mifune"]);
+                    }             
+
+                    // Update the player.
+                    p1.Update(gameTime);
+
+                    // Spawn enemies.
+                    SpawnEnemies(gameTime);
+
+                    if (p1.Score >= 1000)
+                    {
+                        currentState = gameState.ROUND2;
+                    }
+                    break;
+
+                case gameState.ROUND2:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Abandoned Factory"]))
+                    {
+                        currentlyPlaying = bgm["Abandoned Factory"];
+                        MediaPlayer.Volume += 0.2f;
+                        MediaPlayer.Play(bgm["Abandoned Factory"]);
+                    }                
+
+                    // Update the player.
+                    p1.Update(gameTime);
+
+                    // Spawn enemies.
+                    SpawnEnemies(gameTime);
+
+                    if (p1.Score >= 2000)
+                    {
+                        currentState = gameState.ROUND3;
+                    }
+                    break;
+
+                case gameState.ROUND3:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Monado Mandala"]))
+                    {
+                        currentlyPlaying = bgm["Monado Mandala"];
+                        MediaPlayer.Play(bgm["Monado Mandala"]);
+                    }
+
+                    // Update the player.
+                    p1.Update(gameTime);
+
+                    // Spawn enemies.
+                    SpawnEnemies(gameTime);
+
+                    if (p1.Score >= 3000)
+                    {
+                        currentState = gameState.ROUND3;
+                    }
+                    break;
+
+                case gameState.GAMEOVER:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Game Over"]))
+                    {
+                        currentlyPlaying = bgm["Game Over"];
+                        MediaPlayer.Play(bgm["Game Over"]);
+                    }
+                    break;
+
+                case gameState.WIN:
+                    break;
+            }
 
             #region Collision Checking.
             // Check enemy collision with player.
-            foreach (Enemy e in enemies)
+            if (currentState != gameState.GAMEOVER)
             {
-                e.CheckPlayerCollision(p1);
-
-                
-
-                // Check player projectile collision with enemy.
-                foreach (Projectile p in p1.projectilesFired)
+                foreach (Enemy e in enemies)
                 {
-                    p.CheckEnemyCollision(e);
-                }
+                    e.CheckPlayerCollision(p1);
 
-                // Check enemy projectile collision with player.
-                foreach (Projectile p in e.projectilesFired)
-                {
-                    p1.CheckEnemyProjectileCollision(p);
+                    // Check player projectile collision with enemy.
+                    foreach (Projectile p in p1.projectilesFired)
+                    {
+                        p.CheckEnemyCollision(e);
+                    }
+
+                    // Check enemy projectile collision with player.
+                    foreach (Projectile p in e.projectilesFired)
+                    {
+                        p1.CheckEnemyProjectileCollision(p);
+                    }
                 }
-            }          
-            
+            }
             #endregion
-
             // TODO: Add your update logic here
+
+            // End the game if the player's health reaches 0.
+            if (p1.Health <= 0 && currentState != gameState.GAMEOVER)
+            {
+                currentState = gameState.GAMEOVER;
+            }
 
             base.Update(gameTime);
         }
@@ -170,39 +285,134 @@ namespace Hong_Kong_97_Gaiden
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-
-            spriteBatch.Begin();
-
-            // Draw the background.
-            spriteBatch.Draw(background1, new Vector2(0, 0), Color.White);          
-
-            // Draw the player.
-            p1.Draw(spriteBatch);
-
-            #region Draw enemies.
-            foreach(Enemy e in enemies)
+                       
+            switch (currentState)
             {
-                e.Draw(spriteBatch);
+                case gameState.TITLE:
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["HK 97 G Logo"], new Vector2(0, 0), Color.White);
+                    spriteBatch.End();
+                    break;
 
-                // Draw any projectiles fired by the enemies.
-                foreach (Projectile p in e.projectilesFired)
-                {
-                    p.Draw(spriteBatch);
-                }
-            }
-            #endregion
+                case gameState.INTRO:
+                    break;
 
-            // Draw any projectiles fired by the player.
-            foreach (Projectile p in p1.projectilesFired)
-            {
-                p.Draw(spriteBatch);
-            }        
+                case gameState.ROUND1:
+                    #region Round 1
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["BG 1"], new Vector2(0, 0), Color.White);
 
-            // Draw the player score.
-            spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
-            spriteBatch.DrawString(scoreFont, "Health: " + p1.Health, new Vector2(10, 60), Color.White);
-            spriteBatch.End();
+                    // Draw the player.
+                    p1.Draw(spriteBatch);
 
+                    #region Draw enemies.
+                    foreach (Enemy e in enemies)
+                    {
+                        e.Draw(spriteBatch);
+
+                        // Draw any projectiles fired by the enemies.
+                        foreach (Projectile p in e.projectilesFired)
+                        {
+                            p.Draw(spriteBatch);
+                        }
+                    }
+                    #endregion
+
+                    // Draw any projectiles fired by the player.
+                    foreach (Projectile p in p1.projectilesFired)
+                    {
+                        p.Draw(spriteBatch);
+                    }
+
+                    // Draw the player score.
+                    spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
+                    spriteBatch.DrawString(scoreFont, "Health: " + p1.Health, new Vector2(10, 60), Color.White);
+                    #endregion
+                    spriteBatch.End();
+                    break;
+
+                case gameState.ROUND2:
+                    #region Round 2
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["BG 1"], new Vector2(0, 0), Color.White);
+
+                    // Draw the player.
+                    p1.Draw(spriteBatch);
+
+                    #region Draw enemies.
+                    foreach (Enemy e in enemies)
+                    {
+                        e.Draw(spriteBatch);
+
+                        // Draw any projectiles fired by the enemies.
+                        foreach (Projectile p in e.projectilesFired)
+                        {
+                            p.Draw(spriteBatch);
+                        }
+                    }
+                    #endregion
+
+                    // Draw any projectiles fired by the player.
+                    foreach (Projectile p in p1.projectilesFired)
+                    {
+                        p.Draw(spriteBatch);
+                    }
+
+                    // Draw the player score.
+                    spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
+                    spriteBatch.DrawString(scoreFont, "Health: " + p1.Health, new Vector2(10, 60), Color.White);
+                    spriteBatch.End();
+                    #endregion
+                    break;
+
+                case gameState.ROUND3:
+                    #region Round 3.
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["BG 1"], new Vector2(0, 0), Color.White);
+
+                    // Draw the player.
+                    p1.Draw(spriteBatch);
+
+                    #region Draw enemies.
+                    foreach (Enemy e in enemies)
+                    {
+                        e.Draw(spriteBatch);
+
+                        // Draw any projectiles fired by the enemies.
+                        foreach (Projectile p in e.projectilesFired)
+                        {
+                            p.Draw(spriteBatch);
+                        }
+                    }
+                    #endregion
+
+                    // Draw any projectiles fired by the player.
+                    foreach (Projectile p in p1.projectilesFired)
+                    {
+                        p.Draw(spriteBatch);
+                    }
+
+                    // Draw the player score.
+                    spriteBatch.DrawString(scoreFont, "Score: " + p1.Score, new Vector2(10, 20), Color.White);
+                    spriteBatch.DrawString(scoreFont, "Health: " + p1.Health, new Vector2(10, 60), Color.White);
+                    spriteBatch.End();
+                    #endregion
+                    break;
+
+                case gameState.GAMEOVER:
+                    spriteBatch.Begin();
+                    // Draw the game over background.
+                    spriteBatch.Draw(bgTextures["HK 97 Game Over"], new Vector2(0, 0), Color.White);
+                    spriteBatch.End();
+                    break;
+
+                case gameState.WIN:
+                    break;
+            }            
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
@@ -224,10 +434,29 @@ namespace Hong_Kong_97_Gaiden
             #region Spawn new enemies if the conditions are right.
             if (enemies.Count <= 15 && counter <= limit)
             {
-                enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width-100), GraphicsDevice.Viewport.Y - 100),
-                    Color.White, 1, "A", enemyTextures, enemyProjectile, sfx));
+                switch (currentState)
+                {
+                    case gameState.ROUND1:
+                        enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width - 100), GraphicsDevice.Viewport.Y - 100),
+                        Color.White, 1, "A", enemyTextures, enemyProjectile, sfx));
+                        counter = 3;
+                        break;
 
-                counter = 3;   
+                    case gameState.ROUND2:
+                        enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width - 100), GraphicsDevice.Viewport.Y - 100),
+                        Color.White, 1, enemyTypes[RandomInt(0, 2)], enemyTextures, enemyProjectile, sfx));
+                        counter = 3;
+                        break;
+
+                    case gameState.ROUND3:
+                        enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width - 100), GraphicsDevice.Viewport.Y - 100),
+                        Color.White, 1, enemyTypes[RandomInt(0, 3)], enemyTextures, enemyProjectile, sfx));
+                        counter = 3;
+                        break;
+                }
+
+
+
             }
             #endregion
 
@@ -251,7 +480,7 @@ namespace Hong_Kong_97_Gaiden
                 if (!enemies[i].Visible && enemies[i].EnemyHealth <= 0)
                 {
                     // Update player score
-                    p1.Score += enemies[i].ScoreWorth;                   
+                    p1.Score += enemies[i].ScoreWorth;
 
                     // Remove enemy.
                     enemies.RemoveAt(i);
@@ -272,7 +501,7 @@ namespace Hong_Kong_97_Gaiden
 
                     // Remove enemy.
                     enemies.RemoveAt(i);
-                }            
+                }
             }
             #endregion
         }
