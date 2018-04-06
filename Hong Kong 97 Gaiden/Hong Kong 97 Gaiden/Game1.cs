@@ -168,17 +168,29 @@ namespace Hong_Kong_97_Gaiden
 
                     if(Keyboard.GetState().IsKeyDown(Keys.Enter))
                     {
-                        currentState = gameState.ROUND1;
+                        currentState = gameState.INTRO;
                     }
                     break;
 
                 case gameState.INTRO:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["Illusions"]))
+                    {
+                        currentlyPlaying = bgm["Illusions"];
+                        MediaPlayer.Volume += 0.2f;
+                        MediaPlayer.Play(bgm["Illusions"]);
+                    }
+
+                    if (Keyboard.GetState().IsKeyDown(Keys.C))
+                    {
+                        currentState = gameState.ROUND1;
+                    }
                     break;
 
                 case gameState.ROUND1:
                     if (!MediaPlayer.Equals(currentlyPlaying, bgm["Mt Mifune"]))
                     {
                         currentlyPlaying = bgm["Mt Mifune"];
+                        MediaPlayer.Volume -= 0.2f;
                         MediaPlayer.Play(bgm["Mt Mifune"]);
                     }             
 
@@ -229,7 +241,7 @@ namespace Hong_Kong_97_Gaiden
 
                     if (p1.Score >= 3000)
                     {
-                        currentState = gameState.ROUND3;
+                        currentState = gameState.WIN;
                     }
                     break;
 
@@ -242,6 +254,11 @@ namespace Hong_Kong_97_Gaiden
                     break;
 
                 case gameState.WIN:
+                    if (!MediaPlayer.Equals(currentlyPlaying, bgm["BGM II"]))
+                    {
+                        currentlyPlaying = bgm["BGM II"];
+                        MediaPlayer.Play(bgm["BGM II"]);
+                    }
                     break;
             }
 
@@ -296,6 +313,10 @@ namespace Hong_Kong_97_Gaiden
                     break;
 
                 case gameState.INTRO:
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["HK 97 G Story"], new Vector2(0, 0), Color.White);
+                    spriteBatch.End();
                     break;
 
                 case gameState.ROUND1:
@@ -411,6 +432,10 @@ namespace Hong_Kong_97_Gaiden
                     break;
 
                 case gameState.WIN:
+                    spriteBatch.Begin();
+                    // Draw the background.
+                    spriteBatch.Draw(bgTextures["HK 97 G Win"], new Vector2(0, 0), Color.White);
+                    spriteBatch.End();
                     break;
             }            
             // TODO: Add your drawing code here

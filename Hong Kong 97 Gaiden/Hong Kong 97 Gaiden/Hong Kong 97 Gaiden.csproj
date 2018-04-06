@@ -61,7 +61,10 @@
   <ItemGroup>
     <Content Include="Content\Backgrounds\BG 1.jpg" />
     <Content Include="Content\Backgrounds\HK 97 G Logo.png" />
+    <Content Include="Content\Backgrounds\HK 97 G Story.png" />
+    <Content Include="Content\Backgrounds\HK 97 G Win.png" />
     <Content Include="Content\Backgrounds\HK 97 Game Over.png" />
+    <Content Include="Content\BGM\BGM II.mp3" />
     <Content Include="Content\BGM\Mt Mifune.mp3" />
     <Content Include="Content\BGM\Club Zodiac.mp3" />
     <Content Include="Content\BGM\Smile Hirasaka.mp3" />
