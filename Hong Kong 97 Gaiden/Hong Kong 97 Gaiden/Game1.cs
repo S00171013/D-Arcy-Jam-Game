@@ -476,7 +476,7 @@ namespace Hong_Kong_97_Gaiden
                     case gameState.ROUND3:
                         enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width - 100), GraphicsDevice.Viewport.Y - 100),
                         Color.White, 1, enemyTypes[RandomInt(0, 3)], enemyTextures, enemyProjectile, sfx));
-                        counter = 3;
+                        counter = 2;
                         break;
                 }
 

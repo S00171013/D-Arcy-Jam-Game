@@ -80,7 +80,7 @@ namespace Hong_Kong_97_Gaiden
             #endregion
 
             // Set initial score.
-            Score = 2550;
+            Score = 0;
 
             // Set input manager.
             new InputManager(myGame);
