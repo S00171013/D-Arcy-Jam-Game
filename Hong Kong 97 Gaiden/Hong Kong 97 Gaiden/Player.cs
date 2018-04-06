@@ -235,5 +235,14 @@ namespace Hong_Kong_97_Gaiden
             }
         }
 
+        public void CheckEnemyProjectileCollision(Projectile other)
+        {
+            if ((Bounds.Intersects(other.Bounds)))
+            {
+                this.Health -= 20;
+                other.Visible = false;
+            }
+        }
+
     }
 }

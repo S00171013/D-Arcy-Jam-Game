@@ -15,7 +15,7 @@ namespace Hong_Kong_97_Gaiden
 
         public string Type { get; }
         public int EnemySpeed { get; }
-        public int EnemyHealth { get; }
+        public int EnemyHealth { get; set; }
         public int ScoreWorth { get; }
         public int ShootCounter { get; }
 
@@ -50,7 +50,7 @@ namespace Hong_Kong_97_Gaiden
 
                 case "B":
                     Image = enemyImagesIn["Enemy Type B"];
-                    EnemySpeed = 5;
+                    EnemySpeed = 10;
                     EnemyHealth = 10;
                     ScoreWorth = 100;
                     ShootCounter = 3;
@@ -85,6 +85,11 @@ namespace Hong_Kong_97_Gaiden
 
             // Reset bounds to account for enemy movement.
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Image.Width / FrameCount, Image.Height);
+
+            if(EnemyHealth <= 0)
+            {
+                Visible = false;
+            }
 
             // Allow the enemy to shoot
             Shoot(gtIn);
@@ -133,14 +138,9 @@ namespace Hong_Kong_97_Gaiden
             if ((Bounds.Intersects(player.Bounds)))
             {
                 player.Health -= 20;
-                this.Visible = false;
-            }
-
-            else
-            {
-                Tint = Color.White;
-
-            }
+                this.EnemyHealth = 0;
+                this.Visible = false;                           
+            }                    
         }
     }
 }

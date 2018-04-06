@@ -126,14 +126,23 @@ namespace Hong_Kong_97_Gaiden
             SpawnEnemies(gameTime);
 
             #region Collision Checking.
-            // Check player and enemy.
+            // Check enemy collision with player.
             foreach (Enemy e in enemies)
             {
                 e.CheckPlayerCollision(p1);
-                
 
-            }
+                // Check player projectile collision with enemy.
+                foreach (Projectile p in p1.projectilesFired)
+                {
+                    p.CheckEnemyCollision(e);
+                }
 
+                // Check enemy projectile collision with player.
+                foreach (Projectile p in e.projectilesFired)
+                {
+                    p1.CheckEnemyProjectileCollision(p);
+                }
+            }          
             
             #endregion
 
@@ -200,7 +209,7 @@ namespace Hong_Kong_97_Gaiden
             }
             #endregion
 
-            // Spawn new enemies if the conditions are right.
+            #region Spawn new enemies if the conditions are right.
             if (enemies.Count <= 15 && counter <= limit)
             {
                 enemies.Add(new Enemy(this, enemyTextures["Enemy Type A"], new Vector2(RandomInt(10, GraphicsDevice.Viewport.Width-100), GraphicsDevice.Viewport.Y - 100),
@@ -208,6 +217,7 @@ namespace Hong_Kong_97_Gaiden
 
                 counter = 3;   
             }
+            #endregion
 
             #region Update each visible enemy.
             foreach (Enemy e in enemies)
@@ -225,8 +235,28 @@ namespace Hong_Kong_97_Gaiden
             // Remove any dead or off-screen enemies from the list.
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (!enemies[i].Visible || enemies[i].EnemyHealth <= 0)
+                // If an enemy has been defeated...
+                if (!enemies[i].Visible && enemies[i].EnemyHealth <= 0)
                 {
+                    // Update player score
+                    p1.Score += enemies[i].ScoreWorth;
+
+                    // Remove enemy.
+                    enemies.RemoveAt(i);
+                }
+
+                // If an enemy manages to get past the player.
+                else if (!enemies[i].Visible && enemies[i].EnemyHealth > 0)
+                {
+                    // The player will lose health and score.
+                    if (p1.Score > enemies[i].ScoreWorth)
+                    {
+                        p1.Score -= enemies[i].ScoreWorth;
+                    }
+
+                    p1.Health -= 20;
+
+                    // Remove enemy.
                     enemies.RemoveAt(i);
                 }
             }

@@ -75,6 +75,19 @@ namespace Hong_Kong_97_Gaiden
             }
             #endregion
 
+            // Reset bounds to account for projectile movement.
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Image.Width / FrameCount, Image.Height);
+
+        }
+
+        public void CheckEnemyCollision(Enemy e)
+        {
+            // Rectangle intersects            
+            if ((Bounds.Intersects(e.Bounds)))
+            {
+                e.EnemyHealth -= 2;
+                this.Visible = false;              
+            }            
         }
     }
 }
